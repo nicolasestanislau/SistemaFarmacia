@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MedicamentoControl {
@@ -15,10 +14,8 @@ public class MedicamentoControl {
     DoubleProperty preco = new SimpleDoubleProperty(0);
     ObjectProperty vencimento = new SimpleObjectProperty(LocalDate.now());
 
-    private static long counter = 0;
-
-    private List<Medicamento> lista = new ArrayList<>();
     private ObservableList<Medicamento> listaView = FXCollections.observableArrayList();
+    private MedicamentoDAO medicamentoDAO = new MedicamentoDAOImpl();
 
     public Medicamento getEntity() {
         Medicamento m = new Medicamento();
@@ -38,17 +35,11 @@ public class MedicamentoControl {
 
     public void salvar() {
         Medicamento m = getEntity();
-        boolean encontrado = false;
-        for (int i = 0; i < lista.size(); i++) {
-            Medicamento medicamento = lista.get(i);
-            if(m.getId() == medicamento.getId()) {
-                lista.set(i, m);
-                encontrado = true;
-                break;
-            }
-        }
-        if(!encontrado) {
-            lista.add(m);
+        if(m.getId() == 0) {
+            medicamentoDAO.adicionar(m);
+            setEntity(new Medicamento());
+        } else {
+            medicamentoDAO.atualizar(id.get(), m);
         }
 
         atualizarListaView();
@@ -56,32 +47,24 @@ public class MedicamentoControl {
 
     public void pesquisar() {
         listaView.clear();
-        for (Medicamento m : lista) {
-            if (m.getNome().contains(nome.get())) {
-                listaView.add(m);
-            }
-        }
+        List<Medicamento> encontrados = medicamentoDAO.pesquisarPorNome(nome.get());
+        listaView.addAll(encontrados);
     }
 
-    public void novoPet() {
+    public void novoMedicamento() {
         Medicamento m = new Medicamento();
-        m.setId(++counter);
+        m.setId(0);
         setEntity(m);
     }
 
     public void remover(long id) {
-        for ( Medicamento m : lista) {
-            if(m.getId() == id) {
-                lista.remove(m);
-                break;
-            }
-        }
+        medicamentoDAO.remover(id);
         atualizarListaView();
     }
 
     public void atualizarListaView() {
         listaView.clear();
-        listaView.addAll(lista);
+        listaView.addAll(medicamentoDAO.pesquisarPorNome(""));
     }
     public ObservableList<Medicamento>  getListaView() {
         return listaView;

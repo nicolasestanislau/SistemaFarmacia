@@ -1,21 +1,19 @@
 package com.example.farmacia;
 
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 import javafx.util.converter.NumberStringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-public class MedicamentoBoundary extends Application {
+public class MedicamentoBoundary extends CommandProducer implements  StrategyBoundary {
 
     private TextField txtId = new TextField();
     private TextField txtNome = new TextField();
@@ -92,7 +90,7 @@ public class MedicamentoBoundary extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public Pane render() {
         BorderPane panelPrincipal = new BorderPane();
         GridPane panCampos = new GridPane();
         txtId.setEditable(false);
@@ -119,6 +117,12 @@ public class MedicamentoBoundary extends Application {
         panCampos.add(btnSalvar, 0, 4);
         panCampos.add(btnPesquisar, 1, 4);
 
+        Button btnInformacao = new Button("Informações");
+        panCampos.add(btnInformacao, 2, 5);
+
+        btnInformacao.setOnAction((e) -> {
+            executeCommand("BOUNDARY-INFORMACOES");
+        });
 
         btnSalvar.setOnAction( e -> {
             control.salvar();
@@ -129,15 +133,11 @@ public class MedicamentoBoundary extends Application {
         });
 
         btnNovoMedicamento.setOnAction( e -> {
-            control.novoPet();
+            control.novoMedicamento();
         });
         panelPrincipal.setTop(panCampos);
         panelPrincipal.setCenter(table);
         this.criarTabela();
-        Scene scn = new Scene(panelPrincipal, 600, 400);
-
-        stage.setScene(scn);
-        stage.setTitle("Gestão de Farmacia");
-        stage.show();
+        return (panelPrincipal);
     }
 }
