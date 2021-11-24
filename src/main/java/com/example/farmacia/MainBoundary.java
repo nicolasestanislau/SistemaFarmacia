@@ -13,12 +13,14 @@ public class MainBoundary extends Application implements CommandExecution {
 
     private MedicamentoBoundary medicamentoBoundary = new MedicamentoBoundary();
     private InformacoesBoundary informacoesBoundary = new InformacoesBoundary();
+    private FuncionarioBoundary funcionarioBoundary = new FuncionarioBoundary();
 
     private BorderPane paneMain = new BorderPane();
 
     public MainBoundary() {
         medicamentoBoundary.addExecution(this);
         informacoesBoundary.addExecution(this);
+        funcionarioBoundary.addExecution(this);
     }
 
     @Override
@@ -34,6 +36,7 @@ public class MainBoundary extends Application implements CommandExecution {
 
         MenuItem itemSair = new MenuItem("Sair");
         MenuItem itemMedicamento = new MenuItem("Medicamento");
+        MenuItem itemFuncionario = new MenuItem("Funcionario");
         MenuItem itemInformacoes = new MenuItem("Informações");
 
         itemSair.setOnAction((e) -> {
@@ -43,11 +46,16 @@ public class MainBoundary extends Application implements CommandExecution {
         itemMedicamento.setOnAction((e) -> {
             execute("BOUNDARY-MEDICAMENTO");
         });
+
+        itemFuncionario.setOnAction((e) -> {
+            execute("BOUNDARY-FUNCIONARIO");
+        });
+
         itemInformacoes.setOnAction((e) -> {
             execute("BOUNDARY-INFORMACOES");
         });
         menuArquivo.getItems().addAll(itemSair);
-        menuCadastro.getItems().addAll(itemMedicamento);
+        menuCadastro.getItems().addAll(itemMedicamento, itemFuncionario);
         menuAjuda.getItems().addAll(itemInformacoes);
 
         menuMain.getMenus().addAll(menuArquivo, menuCadastro, menuAjuda);
@@ -67,6 +75,8 @@ public class MainBoundary extends Application implements CommandExecution {
             paneMain.setCenter(medicamentoBoundary.render());
         } else if("BOUNDARY-INFORMACOES".equals(command)) {
             paneMain.setCenter(informacoesBoundary.render());
+        } else if("BOUNDARY-FUNCIONARIO".equals(command)) {
+            paneMain.setCenter(funcionarioBoundary.render());
         } else if("SAIR".equals(command)) {
             Platform.exit();
             System.exit(0);

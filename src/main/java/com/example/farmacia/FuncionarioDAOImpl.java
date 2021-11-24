@@ -7,33 +7,34 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicamentoDAOImpl implements MedicamentoDAO{
+public class FuncionarioDAOImpl implements FuncionarioDAO {
 
-    private static final String DBURL = "jdbc:mysql://localhost/medicamentodb";
+    private static final String DBURL = "jdbc:mysql://localhost/funcionariodb";
     private static final String DBUSER = "root";
     private static final String DBPASS = "";
 
-    public MedicamentoDAOImpl() {
+    public FuncionarioDAOImpl() {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (Exception e){
             e.printStackTrace();
         }
     }
+
     @Override
-    public void adicionar(Medicamento m) {
+    public void adicionar(Funcionario f) {
         try {
             Connection con =  DriverManager.getConnection(DBURL, DBUSER, DBPASS);
 
-            String sql = "insert into medicamento (id, nome, preco, vencimento) " +
+            String sql = "insert into funcionario (id, nome, cargo, salario) " +
                     "VALUES (?, ? ,?, ?)";
 
             System.out.println(sql);
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setLong(1, m.getId());
-            stmt.setString(2, m.getNome());
-            stmt.setDouble(3, m.getPreco());
-            stmt.setDate(4, java.sql.Date.valueOf(m.getVencimento()));
+            stmt.setLong(1, f.getId());
+            stmt.setString(2, f.getNome());
+            stmt.setString(3, f.getCargo());
+            stmt.setDouble(4, f.getSalario());
             stmt.executeUpdate();
 
             con.close();
@@ -44,25 +45,25 @@ public class MedicamentoDAOImpl implements MedicamentoDAO{
     }
 
     @Override
-    public List<Medicamento> pesquisarPorNome(String nome) {
-        List<Medicamento> encontrados = new ArrayList<>();
+    public List<Funcionario> pesquisarPorNome(String nome) {
+        List<Funcionario> encontrados = new ArrayList<>();
         try {
             Connection con =  DriverManager.getConnection(DBURL, DBUSER, DBPASS);
 
-            String sql = "SELECT * FROM medicamento WHERE nome like '%" + nome + "%'";
+            String sql = "SELECT * FROM funcionario WHERE nome like '%" + nome + "%'";
             System.out.println(sql);
 
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {
-                Medicamento m = new Medicamento();
-                m.setId( rs.getLong("id"));
-                m.setNome(rs.getString("nome"));
-                m.setPreco(rs.getDouble("preco"));
-                m.setVencimento(rs.getDate("vencimento").toLocalDate());
+                Funcionario f = new Funcionario();
+                f.setId( rs.getLong("id"));
+                f.setNome(rs.getString("nome"));
+                f.setCargo(rs.getString("cargo"));
+                f.setSalario(rs.getDouble("salario"));
 
-                encontrados.add(m);
+                encontrados.add(f);
             }
             con.close();
         } catch (Exception e) {
@@ -72,18 +73,18 @@ public class MedicamentoDAOImpl implements MedicamentoDAO{
     }
 
     @Override
-    public void atualizar(long id, Medicamento m) {
+    public void atualizar(long id, Funcionario f) {
         try {
             Connection con =  DriverManager.getConnection(DBURL, DBUSER, DBPASS);
 
-            String sql = "update medicamento  set id = ?, nome = ?, preco = ?, vencimento = ? where id = ?";
+            String sql = "update funcionario  set id = ?, nome = ?, cargo = ?, salario = ? where id = ?";
             System.out.println(sql);
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setLong(1, m.getId());
-            stmt.setString(2, m.getNome());
-            stmt.setDouble(3, m.getPreco());
-            stmt.setDate(4, java.sql.Date.valueOf(m.getVencimento()));
-            stmt.setLong(5, m.getId());
+            stmt.setLong(1, f.getId());
+            stmt.setString(2, f.getNome());
+            stmt.setString(3, f.getCargo());
+            stmt.setDouble(4, f.getSalario());
+            stmt.setLong(5, f.getId());
             stmt.executeUpdate();
 
             con.close();
@@ -98,7 +99,7 @@ public class MedicamentoDAOImpl implements MedicamentoDAO{
         try {
             Connection con =  DriverManager.getConnection(DBURL, DBUSER, DBPASS);
 
-            String sql = "DELETE FROM medicamento WHERE id = ?";
+            String sql = "DELETE FROM funcionario WHERE id = ?";
             System.out.println(sql);
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setLong(1, id);

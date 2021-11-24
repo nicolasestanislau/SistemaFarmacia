@@ -11,15 +11,20 @@ public class InformacoesBoundary extends CommandProducer implements StrategyBoun
 
         VBox pane = new VBox();
         Button btnMedicamentos = new Button("Cadastro Medicamentos");
+        Button btnFuncionarios = new Button("Cadastro Funcionarios");
         pane.getChildren().addAll(
                 new Label("Nicolas Estanislau"),
                 new Label("Sistema de Farmacia"),
                 new Label("Professor Antonio Rodrigues Carvalho Neto"),
-                btnMedicamentos
+                btnMedicamentos,
+                btnFuncionarios
         );
         btnMedicamentos.setOnAction((e) -> {
             executeCommand("BOUNDARY-MEDICAMENTO");
+        });
 
+        btnFuncionarios.setOnAction((e) -> {
+            executeCommand("BOUNDARY-FUNCIONARIO");
         });
 
         return pane;
