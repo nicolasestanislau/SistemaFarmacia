@@ -26,6 +26,7 @@ public class FuncionarioBoundary extends CommandProducer implements StrategyBoun
     private TableView<Funcionario> table = new TableView<>();
 
     private void criarTabela() {
+
         TableColumn<Funcionario, Long> col1 = new TableColumn<>("Id");
         col1.setCellValueFactory( new PropertyValueFactory<>("id"));
 
@@ -39,7 +40,6 @@ public class FuncionarioBoundary extends CommandProducer implements StrategyBoun
         col4.setCellValueFactory( new PropertyValueFactory<>("salario"));
 
         TableColumn<Funcionario, String> col5 = new TableColumn<>("Açoes");
-        col5.setCellValueFactory( new PropertyValueFactory<>("DUMMY"));
         col5.setCellFactory( (tbCol) ->
                 new TableCell<Funcionario, String>(){
                     final Button btn = new Button("Remover");
@@ -64,6 +64,8 @@ public class FuncionarioBoundary extends CommandProducer implements StrategyBoun
                     }
                 }
         );
+
+        table.getColumns().clear();
 
         table.getColumns().addAll(col1, col2, col3, col4, col5);
 

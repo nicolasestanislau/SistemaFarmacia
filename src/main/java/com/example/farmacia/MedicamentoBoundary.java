@@ -48,7 +48,6 @@ public class MedicamentoBoundary extends CommandProducer implements  StrategyBou
         } );
 
         TableColumn<Medicamento, String> col5 = new TableColumn<>("Açoes");
-        col5.setCellValueFactory( new PropertyValueFactory<>("DUMMY"));
         col5.setCellFactory( (tbCol) ->
                 new TableCell<Medicamento, String>(){
                     final Button btn = new Button("Remover");
@@ -73,6 +72,7 @@ public class MedicamentoBoundary extends CommandProducer implements  StrategyBou
                     }
                 }
         );
+        table.getColumns().clear();
 
         table.getColumns().addAll(col1, col2, col3, col4, col5);
 
